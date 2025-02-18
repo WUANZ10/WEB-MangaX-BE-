@@ -3,14 +3,14 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true },
-    avatar: { type: String, default: "" },
     email: { type: String, required: true, unique: true },
-    introduce: { type: String, default: "" },
     password: { type: String, required: true },
+    avatar: { type: String, default: "" },
+    introduce: { type: String, default: "" },
     date_created: { type: Date, default: Date.now },
-    role: { type: Number, required: true, enum: [1, 2] },
-    access_token: { type: String, required: true },
-    refresh_token: { type: String, required: true },
+    isAdmin: { type: Boolean, default: false, required: true },
+    access_token: { type: String, required: false },
+    refresh_token: { type: String, required: false },
   },
   {
     timestamps: true,

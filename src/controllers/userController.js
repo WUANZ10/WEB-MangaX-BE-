@@ -1,16 +1,84 @@
-import { createUserService } from "../services/userService.js";
+import {
+  createUserService,
+  loginUserService,
+} from "../services/userService.js";
 
-const createUser = async (req, res) => {
+export const createUser = async (req, res) => {
   try {
-    console.log(req.body);
-    const newUser = await createUserService();
-    return res.status(201).json(newUser);
-  } catch (e) {
-    return res.status(500).json({
-      success: false,
-      message: e.message,
+    // console.log(req.body);
+
+    const { username, email, password, confirmPassword } = req.body;
+
+    const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    const isEmailValid = emailRegex.test(email);
+
+    if (!username || !email || !password || !confirmPassword) {
+      return res.status(200).json({
+        status: "error",
+        message: "All fields are required",
+      });
+    }
+
+    if (!isEmailValid) {
+      return res.status(200).json({
+        status: "error",
+        message: "Invalid email format",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(200).json({
+        status: "error",
+        message: "Password and confirm password do not match",
+      });
+    }
+
+    const response = await createUserService(req.body);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message,
     });
   }
 };
 
-export { createUser };
+export const loginUser = async (req, res) => {
+  try {
+    // console.log(req.body);
+
+    const { username, email, password, confirmPassword } = req.body;
+
+    const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    const isEmailValid = emailRegex.test(email);
+
+    if (!username || !email || !password || !confirmPassword) {
+      return res.status(200).json({
+        status: "error",
+        message: "All fields are required",
+      });
+    }
+
+    if (!isEmailValid) {
+      return res.status(200).json({
+        status: "error",
+        message: "Invalid email format",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(200).json({
+        status: "error",
+        message: "Password and confirm password do not match",
+      });
+    }
+
+    const response = await loginUserService(req.body);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message,
+    });
+  }
+};
