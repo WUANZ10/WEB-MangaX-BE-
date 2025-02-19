@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { generateRefreshToken, genneralAccessToken } from "./jwtService.js";
 
-export const createUserService = async (userRegister) => {
+export const createUser = async (userRegister) => {
   const { username, email, password, confirmPassword } = userRegister;
 
   try {
@@ -36,7 +36,7 @@ export const createUserService = async (userRegister) => {
   }
 };
 
-export const loginUserService = async (userLogin) => {
+export const loginUser = async (userLogin) => {
   const { email, password } = userLogin;
 
   try {
@@ -76,5 +76,28 @@ export const loginUserService = async (userLogin) => {
     };
   } catch (error) {
     throw new Error(error.message);
+  }
+};
+
+export const updateUser = async (id, data) => {
+  try {
+    const existingUser = await User.findOne({ _id: id });
+
+    if (!existingUser) {
+      return {
+        status: "error",
+        message: "User not found",
+      };
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
+    console.log("updatedUser", updatedUser);
+    return {
+      status: "success",
+      message: "User updated successfully",
+      data: updatedUser,
+    };
+  } catch (error) {
+    throw new Error("Failed to update user");
   }
 };

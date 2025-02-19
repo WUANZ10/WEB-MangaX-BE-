@@ -1,12 +1,7 @@
-import {
-  createUserService,
-  loginUserService,
-} from "../services/userService.js";
+import * as userService from "../services/userService.js";
 
 export const createUser = async (req, res) => {
   try {
-    // console.log(req.body);
-
     const { username, email, password, confirmPassword } = req.body;
 
     const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
@@ -33,8 +28,7 @@ export const createUser = async (req, res) => {
       });
     }
 
-    const response = await createUserService(req.body);
-
+    const response = await userService.createUser(req.body);
     return res.status(200).json(response);
   } catch (error) {
     return res.status(404).json({
@@ -45,8 +39,6 @@ export const createUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    // console.log(req.body);
-
     const { username, email, password, confirmPassword } = req.body;
 
     const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
@@ -73,8 +65,26 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    const response = await loginUserService(req.body);
+    const response = await userService.loginUser(req.body);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message,
+    });
+  }
+};
 
+export const updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const data = req.body;
+    if (!userId) {
+      return res.status(200).json({
+        status: "error",
+        message: "The userId is required",
+      });
+    }
+    const response = await userService.updateUser(userId, data);
     return res.status(200).json(response);
   } catch (error) {
     return res.status(404).json({
