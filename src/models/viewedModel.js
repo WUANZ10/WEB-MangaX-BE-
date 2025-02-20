@@ -10,6 +10,6 @@ const viewedSchema = new mongoose.Schema({
   last_viewed_time: { type: Date, default: Date.now },
 });
 
-const Viewed = mongoose.model("Viewed", viewedSchema);
+const Viewed = mongoose.model("Viewed", viewedSchema,"Viewed");
 
 export default Viewed;
