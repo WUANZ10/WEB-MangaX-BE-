@@ -17,6 +17,6 @@ const notificationSchema = new mongoose.Schema({
   sender_role: { type: Number, required: true },
 });
 
-const Notification = mongoose.model("Notification", notificationSchema);
+const Notification = mongoose.model("Notification", notificationSchema,"Notification");
 
 export default Notification;
