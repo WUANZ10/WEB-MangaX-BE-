@@ -122,6 +122,38 @@ const userService = {
       throw new Error("Failed to delete user");
     }
   },
+  getAllUser: async () => {
+    try {
+      const allUsers = await User.find();
+      return {
+        status: "success",
+        message: "Users retrieved successfully",
+        data: allUsers,
+      };
+    } catch (error) {
+      throw new Error("Failed to retrieve users");
+    }
+  },
+  detailedUser: async (id) => {
+    try {
+      const user = await User.findOne({ _id: id });
+
+      if (!user) {
+        return {
+          status: "error",
+          message: "User not found",
+        };
+      }
+
+      return {
+        status: "success",
+        message: "Successfully retrieved user details",
+        data: user,
+      };
+    } catch (error) {
+      throw new Error("Failed to retrieve user details");
+    }
+  },
 };
 
 export default userService;

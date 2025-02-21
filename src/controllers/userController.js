@@ -107,6 +107,33 @@ const userController = {
       });
     }
   },
+  getAllUser: async (req, res) => {
+    try {
+      const response = await userService.getAllUser();
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  },
+  detailedUser: async (req, res) => {
+    try {
+      const userId = req.params.id;
+      if (!userId) {
+        return res.status(200).json({
+          status: "error",
+          message: "The userId is required",
+        });
+      }
+      const response = await userService.detailedUser(userId);
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  },
 };
 
 export default userController;
