@@ -1,4 +1,6 @@
 import userService from "../services/userService.js";
+import jwtService from "../services/jwtService.js";
+
 const userController = {
   createUser: async (req, res) => {
     try {
@@ -127,6 +129,23 @@ const userController = {
         });
       }
       const response = await userService.detailedUser(userId);
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(404).json({
+        message: error.message,
+      });
+    }
+  },
+  refreshToken: async (req, res) => {
+    try {
+      const token = req.headers.token.split(" ")[1];
+      if (!token) {
+        return res.status(200).json({
+          status: "error",
+          message: "The token is required",
+        });
+      }
+      const response = await jwtService.refreshToken(token);
       return res.status(200).json(response);
     } catch (error) {
       return res.status(404).json({
