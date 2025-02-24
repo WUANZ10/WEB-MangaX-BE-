@@ -31,8 +31,56 @@ export const createUser = async (userRegister) => {
         data: createdUser,
       };
     }
+<<<<<<< Updated upstream
   } catch (error) {
     throw new Error(error.message);
+=======
+  },
+  updateUser: async (id, data) => {
+    try {
+      const existingUser = await User.findOne({ _id: id });
+
+      if (!existingUser) {
+        return {
+          status: "error",
+          message: "User not found",
+        };
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
+      return {
+        status: "success",
+        message: "User updated successfully",
+        data: updatedUser,
+      };
+    } catch (error) {
+      throw new Error("Failed to update user");
+    }
+  },
+  deleteUser: async (id) => {
+    try {
+      const existingUser = await User.findOne({ _id: id });
+
+      if (!existingUser) {
+        return {
+          status: "error",
+          message: "User not found",
+        };
+      }
+
+      const deletedUser = await User.findByIdAndDelete(id);
+      console.log("deletedUser", deletedUser);
+      return {
+        status: "success",
+        message: "User deleted successfully",
+      };
+    } catch (error) {
+      throw new Error("Failed to delete user");
+    }
+  },
+  listProfile:async(id)=>{
+    const data=await User.findOne({id})
+>>>>>>> Stashed changes
   }
 };
 
