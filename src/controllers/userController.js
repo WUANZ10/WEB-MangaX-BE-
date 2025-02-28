@@ -74,16 +74,15 @@ const userController = {
   },
   updateUser: async (req, res) => {
     try {
-      const userId = req.params.id;
-      const data = req.body;
-      if (!userId) {
+      const data=req.body
+      if (!data._id) {
         return res.status(200).json({
           status: "error",
           message: "The userId is required",
         });
       }
-      const response = await userService.updateUser(userId, data);
-      return res.status(200).json(response);
+      const response = await userService.updateUser(data._id,data);
+      return res.done(response.data)
     } catch (error) {
       return res.status(404).json({
         message: error.message,
@@ -105,6 +104,15 @@ const userController = {
       return res.status(404).json({
         message: error.message,
       });
+    }
+  },
+  getUser: async (req, res) => {
+    try {
+      const userId = req.body;
+      const response = await userService.getUser(userId);
+      return res.done(response.data);
+    } catch (err) {
+      return res.serverErorr({ err });
     }
   },
 };

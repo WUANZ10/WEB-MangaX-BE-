@@ -122,6 +122,26 @@ const userService = {
       throw new Error("Failed to delete user");
     }
   },
+  getUser: async (id) => {
+    try {
+      const dataUser = await User.findOne(id);
+      if (!dataUser) {
+        return {
+          message: "identify user",
+          status: "error",
+        };
+      }
+      return{
+        data:dataUser,
+        status:'done'
+      }
+    } catch (err) {
+      return{
+        message:'error server',
+        status:'error'
+      }
+    }
+  },
 };
 
 export default userService;
