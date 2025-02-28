@@ -113,7 +113,6 @@ const userService = {
       }
 
       const deletedUser = await User.findByIdAndDelete(id);
-      console.log("deletedUser", deletedUser);
       return {
         status: "success",
         message: "User deleted successfully",
