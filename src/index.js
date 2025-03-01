@@ -1,16 +1,20 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from 'cors'
 import mongoose from "mongoose";
 import routes from "./routes/index.js";
-import bodyParser from "body-parser";
+import { basicReponse } from "./middleware/basicReponse.js";
 
 dotenv.config();
 
 const app = express();
+
+
 const PORT = process.env.PORT || 3001;
 
+app.use(basicReponse);
 app.use(express.json());
-app.use(bodyParser.json());
+app.use(cors())
 
 routes(app);
 
