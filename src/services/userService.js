@@ -1,6 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import { generateRefreshToken, genneralAccessToken } from "./jwtService.js";
+import jwtService from "./jwtService.js";
 
 const userService = {
   createUser: async (userRegister) => {
@@ -60,12 +60,12 @@ const userService = {
         };
       }
 
-      const access_token = await genneralAccessToken({
+      const access_token = await jwtService.genneralAccessToken({
         id: existingUser.id,
         isAdmin: existingUser.isAdmin,
       });
 
-      const refresh_token = await generateRefreshToken({
+      const refresh_token = await jwtService.generateRefreshToken({
         id: existingUser.id,
         isAdmin: existingUser.isAdmin,
       });
@@ -113,7 +113,6 @@ const userService = {
       }
 
       const deletedUser = await User.findByIdAndDelete(id);
-      console.log("deletedUser", deletedUser);
       return {
         status: "success",
         message: "User deleted successfully",
@@ -131,15 +130,27 @@ const userService = {
           status: "error",
         };
       }
-      return{
-        data:dataUser,
-        status:'done'
-      }
+      return {
+        data: dataUser,
+        status: "done",
+      };
     } catch (err) {
-      return{
-        message:'error server',
-        status:'error'
-      }
+      return {
+        message: "error server",
+        status: "error",
+      };
+    }
+  },
+  getAllUser: async () => {
+    try {
+      const allUsers = await User.find();
+      return {
+        status: "success",
+        message: "Users retrieved successfully",
+        data: allUsers,
+      };
+    } catch (error) {
+      throw new Error("Failed to retrieve users");
     }
   },
 };
