@@ -6,6 +6,10 @@ const userService = {
   createUser: async (userRegister) => {
     const { username, email, password, confirmPassword } = userRegister;
 
+    if (password !== confirmPassword) {
+      throw new Error("Passwords do not match");
+    }
+
     try {
       const existingUser = await User.findOne({ email });
 
