@@ -11,7 +11,7 @@ const registerSchema = Joi.object({
   username: Joi.string().trim().max(255).required(),
   email: Joi.string().trim().email().max(255).required(),
   password: Joi.string().trim().min(3).max(100).required(),
-  confirmPassword: Joi.string().trim().min(8).max(100).required(),
+  confirmPassword: Joi.string().trim().min(3).max(100).required(),
 });
 
 const loginSchema = Joi.object({

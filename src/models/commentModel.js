@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const favoriteSchema = new mongoose.Schema(
+const commentSchema = new mongoose.Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -12,12 +12,11 @@ const favoriteSchema = new mongoose.Schema(
       ref: "Album",
       required: true,
     },
-    time_added: { type: Date, default: Date.now },
-    last_viewed_time: { type: Date, default: Date.now },
+    content: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-const Favorite = mongoose.model("Favorite", favoriteSchema);
+const Comment = mongoose.model("Comment", commentSchema);
 
-export default Favorite;
+export default Comment;
