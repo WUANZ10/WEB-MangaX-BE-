@@ -15,7 +15,7 @@ const favoriteSchema = new mongoose.Schema(
     time_added: { type: Date, default: Date.now },
     last_viewed_time: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  // { timestamps: true } có time_added rồi thì này bị thừa
 );
 
 const Favorite = mongoose.model("Favorite", favoriteSchema);
