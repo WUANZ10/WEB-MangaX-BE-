@@ -4,9 +4,10 @@ import userController from "../controllers/userController.js";
 import { authMiddleware, authUserMiddleware } from "../middlewares/authMiddleware.js";
 import { validateUpdate } from "../middleware/validate/validateUpdate.js";
 
-router.get("/data-user",userController.getUser)
+router.post("/data-user",userController.getUser)
 router.post("/register", userController.createUser);
 router.post("/login", userController.loginUser);
+router.put("/change-pass",userController.changePassUser)
 router.put("/update-user",validateUpdate, userController.updateUser);
 router.delete("/deleteUser/:id", authMiddleware, userController.deleteUser);
 router.get("/getAll", authMiddleware, userController.getAllUser);
