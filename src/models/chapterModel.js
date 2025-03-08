@@ -8,7 +8,7 @@ const chapterSchema = new mongoose.Schema(
       required: true,
     },
     chapter_name: { type: String, required: true },
-    description: { type: String, default: "" },
+    chapter_number: { type: Number, require: true },
     pages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Page" }],
   },
   { timestamps: true }

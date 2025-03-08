@@ -1,0 +1,61 @@
+import albumService from "../services/albumService.js";
+
+const handleError = (res, error, statusCode = 404) => {
+  return res.status(statusCode).json({ message: error.message });
+};
+
+const albumController = {
+  createAlbum: async (req, res) => {
+    try {
+      const { title, artist, author, tags, description, cover_image, status } =
+        req.body;
+
+      const uploader_id = req.user.id;
+
+      if (!title || !artist || !author || !tags || !cover_image) {
+        return res.status(400).json({
+          status: "error",
+          message: "Please fill all the required fields",
+        });
+      }
+
+      const newAlbum = {
+        title,
+        uploader_id,
+        artist,
+        author,
+        tags,
+        description,
+        cover_image,
+        status,
+      };
+
+      const response = await albumService.createAlbum(newAlbum);
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return handleError(res, error);
+    }
+  },
+
+  updateAlbum: async (req, res) => {
+    try {
+      const albumId = req.params.id;
+      const data = req.body;
+
+      if (!albumId) {
+        return res.status(400).json({
+          status: "error",
+          message: "Album ID is required",
+        });
+      }
+
+      const response = await albumService.updateAlbum(albumId, data);
+      return res.status(200).json(response);
+    } catch (error) {
+      return handleError(res, error);
+    }
+  },
+};
+
+export default albumController;
