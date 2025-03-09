@@ -69,6 +69,32 @@ const albumService = {
       throw new Error("Failed to update album: " + error.message);
     }
   },
+
+  getAllAlbum: async () => {
+    try {
+      const albums = await Album.find({});
+      return handleSuccessResponse("Albums retrieved successfully", albums);
+    } catch (error) {
+      throw new Error("Failed to retrieve albums: " + error.message);
+    }
+  },
+
+  detailedAlbum: async (id) => {
+    try {
+      const album = await Album.findOne({ _id: id });
+
+      if (!album) {
+        return handleErrorResponse("Album not found");
+      }
+
+      return handleSuccessResponse(
+        "Successfully retrieved album details",
+        album
+      );
+    } catch (error) {
+      throw new Error("Failed to retrieve album details: " + error.message);
+    }
+  },
 };
 
 export default albumService;

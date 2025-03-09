@@ -1,22 +1,11 @@
 import Joi from "joi";
-
-const getValidationErrorDetails = (error) => {
-  return error.details.map((detail) => ({
-    message: detail.message,
-    path: detail.path,
-  }));
-};
+import { getValidationErrorDetails } from "../utils/validationErr.js";
 
 const registerSchema = Joi.object({
   username: Joi.string().trim().max(255).required(),
   email: Joi.string().trim().email().max(255).required(),
   password: Joi.string().trim().min(3).max(100).required(),
   confirmPassword: Joi.string().trim().min(3).max(100).required(),
-});
-
-const loginSchema = Joi.object({
-  email: Joi.string().trim().email().max(255).required(),
-  password: Joi.string().trim().min(3).max(100).required(),
 });
 
 export const validateRegisterRequest = async (req, res, next) => {
@@ -31,6 +20,11 @@ export const validateRegisterRequest = async (req, res, next) => {
     });
   }
 };
+
+const loginSchema = Joi.object({
+  email: Joi.string().trim().email().max(255).required(),
+  password: Joi.string().trim().min(3).max(100).required(),
+});
 
 export const validateLoginRequest = async (req, res, next) => {
   try {
