@@ -74,7 +74,20 @@ const albumController = {
 
   getAllAlbum: async (req, res) => {
     try {
-      const response = await albumService.getAllAlbum();
+      let { keyword, page, pageSize, orderBy, orderDirection } = req.query;
+
+      if (!page || page <= 0) page = 1;
+      if (!pageSize || pageSize <= 0) pageSize = 15;
+      if (!orderBy) orderBy = "createdAt";
+      if (!orderDirection) orderDirection = "desc";
+
+      const response = await albumService.getAllAlbum({
+        keyword,
+        page,
+        pageSize,
+        orderBy,
+        orderDirection,
+      });
       return res.status(200).json(response);
     } catch (error) {
       return handleError(res, error);
