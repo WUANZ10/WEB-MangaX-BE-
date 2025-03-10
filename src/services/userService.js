@@ -65,7 +65,7 @@ const userService = {
         return handleErrorResponse("Invalid password");
       }
 
-      const access_token = await jwtService.genneralAccessToken({
+      const access_token = await jwtService.generalAccessToken({
         id: existingUser.id,
         isAdmin: existingUser.isAdmin,
       });
