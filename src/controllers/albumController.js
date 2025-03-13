@@ -74,7 +74,7 @@ const albumController = {
 
   getAllAlbum: async (req, res) => {
     try {
-      let { keyword, page, pageSize, orderBy, orderDirection } = req.query;
+      const { keyword, page, pageSize, orderBy, orderDirection } = req.query;
 
       if (!page || page <= 0) page = 1;
       if (!pageSize || pageSize <= 0) pageSize = 15;
