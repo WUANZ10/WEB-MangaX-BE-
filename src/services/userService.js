@@ -78,6 +78,7 @@ const userService = {
       return handleSuccessResponse("User logged in successfully", {
         access_token,
         refresh_token,
+        userId: existingUser.id,
       });
     } catch (error) {
       throw new Error(error.message);
