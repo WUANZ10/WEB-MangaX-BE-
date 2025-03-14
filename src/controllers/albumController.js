@@ -74,7 +74,7 @@ const albumController = {
 
   getAllAlbum: async (req, res) => {
     try {
-      const { keyword, page, pageSize, orderBy, orderDirection } = req.query;
+      let { keyword, page, pageSize, orderBy, orderDirection } = req.query;
 
       if (!page || page <= 0) page = 1;
       if (!pageSize || pageSize <= 0) pageSize = 15;
@@ -97,15 +97,23 @@ const albumController = {
   detailedAlbum: async (req, res) => {
     try {
       const albumId = req.params.id;
-
-      if (!albumId) {
+  
+      if (!albumId || typeof albumId !== "string") {
         return res.status(400).json({
           status: "error",
-          message: "Album ID is required",
+          message: "Valid album ID is required",
         });
       }
-
+  
       const response = await albumService.detailedAlbum(albumId);
+  
+      if (!response) {
+        return res.status(404).json({
+          status: "error",
+          message: "Album not found",
+        });
+      }
+  
       return res.status(200).json(response);
     } catch (error) {
       return handleError(res, error);
