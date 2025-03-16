@@ -65,7 +65,7 @@ const userService = {
         return handleErrorResponse("Invalid password");
       }
 
-      const access_token = await jwtService.genneralAccessToken({
+      const access_token = await jwtService.generalAccessToken({
         id: existingUser.id,
         isAdmin: existingUser.isAdmin,
       });
@@ -141,9 +141,9 @@ const userService = {
       throw new Error("Failed to retrieve users");
     }
   },
-  changePassUser: async (data) => {
+  changePassUser: async (data,userId) => {
     try {
-      const existingUser = await User.findOne({ _id: data._id });
+      const existingUser = await User.findOne({ _id: userId});
       if (!existingUser) {
         return handleUserNotFound();
       }

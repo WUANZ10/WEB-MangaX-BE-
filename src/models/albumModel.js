@@ -3,14 +3,14 @@ import mongoose from "mongoose";
 const albumSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    user_id: {
+    uploader_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    }, // Tham chiếu đến User (người đăng)
-    author:{type:String,required:true},
-    artist:{type:String,required:true},
-    tags: { type: [String], default: [] ,required:true},
+    },
+    artist: { type: String, default: "", require: true },
+    author: { type: String, default: "", require: true },
+    tags: { type: [String], default: [] },
     description: { type: String, default: "" },
     cover_image: { type: String, default: "" },
     chapters: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chapter" }],

@@ -57,6 +57,7 @@ const userController = {
 
   updateUser: async (req, res) => {
     try {
+      const userId=req.params.id
       const data = req.body;
       if (!data._id) {
         return res.status(200).json({
@@ -64,7 +65,7 @@ const userController = {
           message: "The userId is required",
         });
       }
-      const response = await userService.updateUser(data._id, data);
+      const response = await userService.updateUser(userId, data);
       return res.done(response.data);
     } catch (error) {
       return handleError(res, error);
@@ -122,13 +123,14 @@ const userController = {
   },
   changePassUser: async (req, res) => {
     try {
+      const userId=req.params.id
       const data = req.body;
       if (data.newpass !== data.verifypass) {
         return res.status(402).send({
           message: "wrong verify pass",
         });
       }
-      const response = await userService.changePassUser(data);
+      const response = await userService.changePassUser(data,userId);
       if (response.status >= 400) {
         return res.status(response.status).json(response);
       }
