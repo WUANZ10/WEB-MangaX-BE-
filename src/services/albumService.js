@@ -70,10 +70,38 @@ const albumService = {
     }
   },
 
-  getAllAlbum: async () => {
+  getAllAlbum: async (
+    { keyword, page, pageSize, orderBy, orderDirection },
+    populate = []
+  ) => {
     try {
-      const albums = await Album.find({});
-      return handleSuccessResponse("Albums retrieved successfully", albums);
+      const query = {};
+      if (keyword) {
+        query.title = { $regex: new RegExp(".*" + keyword + ".*", "i") };
+      }
+      const totalAlbum = await Album.countDocuments(query);
+      const totalPages = Math.ceil(totalAlbum / pageSize);
+
+      const sort = {};
+      sort[orderBy] = orderDirection == "asc" ? 1 : -1;
+
+      const albums = await Album.find(
+        query,
+        {},
+        {
+          limit: pageSize,
+          skip: (page - 1) * pageSize,
+          sort: sort,
+          populate: populate,
+        }
+      );
+      return handleSuccessResponse("Albums retrieved successfully", {
+        albums,
+        total: totalAlbum,
+        currentPage: page,
+        pageSize,
+        totalPages,
+      });
     } catch (error) {
       throw new Error("Failed to retrieve albums: " + error.message);
     }
