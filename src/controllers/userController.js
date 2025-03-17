@@ -75,17 +75,16 @@ const userController = {
 
   updateUser: async (req, res) => {
     try {
-      const userId = req.params.id;
+      const userId=req.params.id
       const data = req.body;
-
-      if (!userId) {
-        return res
-          .status(400)
-          .json({ status: "error", message: "The userId is required" });
+      if (!data._id) {
+        return res.status(200).json({
+          status: "error",
+          message: "The userId is required",
+        });
       }
-
       const response = await userService.updateUser(userId, data);
-      return res.status(200).json(response);
+      return res.done(response.data);
     } catch (error) {
       return handleError(res, error);
     }
@@ -107,7 +106,15 @@ const userController = {
       return handleError(res, error);
     }
   },
-
+  getUser: async (req, res) => {
+    try {
+      const userId = req.body;
+      const response = await userService.getUser(userId);
+      return res.done(response.data);
+    } catch (err) {
+      return res.serverErorr({ err });
+    }
+  },
   getAllUser: async (req, res) => {
     try {
       const response = await userService.getAllUser();
@@ -116,24 +123,6 @@ const userController = {
       return handleError(res, error);
     }
   },
-
-  detailedUser: async (req, res) => {
-    try {
-      const userId = req.params.id;
-
-      if (!userId) {
-        return res
-          .status(400)
-          .json({ status: "error", message: "The userId is required" });
-      }
-
-      const response = await userService.detailedUser(userId);
-      return res.status(200).json(response);
-    } catch (error) {
-      return handleError(res, error);
-    }
-  },
-
   refreshToken: async (req, res) => {
     console.log(req.cookies);
     try {
@@ -147,6 +136,24 @@ const userController = {
 
       const response = await jwtService.refreshToken(token);
       return res.status(200).json(response);
+    } catch (error) {
+      return handleError(res, error);
+    }
+  },
+  changePassUser: async (req, res) => {
+    try {
+      const userId=req.params.id
+      const data = req.body;
+      if (data.newpass !== data.verifypass) {
+        return res.status(402).send({
+          message: "wrong verify pass",
+        });
+      }
+      const response = await userService.changePassUser(data,userId);
+      if (response.status >= 400) {
+        return res.status(response.status).json(response);
+      }
+      return res.done(response);
     } catch (error) {
       return handleError(res, error);
     }

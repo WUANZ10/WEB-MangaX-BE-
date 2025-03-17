@@ -4,7 +4,6 @@ import userController from "../controllers/userController.js";
 import {
   authMiddleware,
   authAdminMiddleware,
-  authUserMiddleware,
 } from "../middlewares/authMiddleware.js";
 import {
   validateLoginRequest,

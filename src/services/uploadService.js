@@ -14,7 +14,7 @@ export const uploadImage = async (file, folder = "MangaX") => {
     }
   };
 
-  export const uploadMultipleImages = async (files, folder = "MangaX") => {
+  export const uploadMultiImage = async (files, folder = "MangaX") => {
     try {
       if (!files || files.length === 0) throw new Error("Không có file để upload!");
   
