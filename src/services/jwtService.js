@@ -30,7 +30,7 @@ const jwtService = {
 
   refreshToken: async (token) => {
     try {
-      const decoded = await jwt.verify(token, process.env.REFRESH_TOKEN);
+      const decoded = jwt.verify(token, process.env.REFRESH_TOKEN);
       const { payload } = decoded;
 
       const access_token = await jwtService.generalAccessToken({
