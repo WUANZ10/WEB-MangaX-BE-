@@ -105,19 +105,6 @@ const albumService = {
     } catch (error) {
       throw new Error("Failed to retrieve album details: " + error.message);
     }
-  },uploadImage:async(files)=>{
-    try{
-      const upload=await Promise.all(
-        files.map(async (file,index)=>{
-          const dataUrl=`data:${file.mimetype};base64,${file.buffer.toString("base64")}`
-          const uploadResult=await cloudinary.uploader.upload(dataUrl,{folder:"MangaX"})
-          return{page_number:index+1,image_url:uploadResult.secure_url}
-        })
-      )
-      return upload
-    }catch(err){
-      throw new Error("Lỗi upload ảnh: "+err.message)
-    }
   }
 };
 
