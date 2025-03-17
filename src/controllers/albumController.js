@@ -3,6 +3,13 @@ import {
   validateCreateAlbumRequest,
   validateUpdateAlbumRequest,
 } from "../middlewares/albumMiddleware.js";
+import dotenv from "dotenv";
+import multer from "multer";
+import { uploadImage } from "../services/uploadService.js";
+const storage=multer.memoryStorage()
+const upload=multer({storage:storage}).array("images",20)
+
+dotenv.config()
 
 const handleError = (res, error, statusCode = 404) => {
   return res.status(statusCode).json({ message: error.message });
@@ -20,17 +27,20 @@ const albumController = {
           description,
           cover_image,
           status,
-        } = req.body;
-
+        } = req.body;        
         const uploader_id = req.user.id;
-
-        if (!title || !artist || !author || !tags || !cover_image) {
+        
+        if (!title || !artist || !author || !tags) {
           return res.status(400).json({
             status: "error",
             message: "Please fill all the required fields",
           });
         }
-
+        
+        let coverImageUrl=""
+        if(req.file){
+          coverImageUrl=await uploadImage(req.file,"MangaX/AlbumCover")
+        }
         const newAlbum = {
           title,
           uploader_id,
@@ -38,8 +48,9 @@ const albumController = {
           author,
           tags,
           description,
-          cover_image,
+          cover_image:coverImageUrl,
           status,
+          chapter:[]
         };
 
         const response = await albumService.createAlbum(newAlbum);

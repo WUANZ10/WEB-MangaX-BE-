@@ -1,5 +1,5 @@
 import Album from "../models/albumModel.js";
-
+import cloudinary from '../cloudinary.js'
 const handleSuccessResponse = (message, data = null) => ({
   status: "success",
   message,
@@ -13,16 +13,7 @@ const handleErrorResponse = (message) => ({
 
 const albumService = {
   createAlbum: async (newAlbum) => {
-    const {
-      title,
-      uploader_id,
-      artist,
-      author,
-      tags,
-      description,
-      cover_image,
-      status,
-    } = newAlbum;
+    const {title} = newAlbum;
 
     try {
       const existingAlbum = await Album.findOne({ title });
@@ -30,19 +21,11 @@ const albumService = {
       if (existingAlbum) {
         return handleErrorResponse("The name of the album already exists");
       }
-
       const createdAlbum = await Album.create({
-        title,
-        uploader_id,
-        artist,
-        author,
-        tags,
-        description,
-        cover_image,
+        ...newAlbum,
         views: 0,
         favorites: 0,
         ratings: 5,
-        status,
       });
 
       return handleSuccessResponse("Album created successfully", createdAlbum);
@@ -122,7 +105,20 @@ const albumService = {
     } catch (error) {
       throw new Error("Failed to retrieve album details: " + error.message);
     }
-  },
+  },uploadImage:async(files)=>{
+    try{
+      const upload=await Promise.all(
+        files.map(async (file,index)=>{
+          const dataUrl=`data:${file.mimetype};base64,${file.buffer.toString("base64")}`
+          const uploadResult=await cloudinary.uploader.upload(dataUrl,{folder:"MangaX"})
+          return{page_number:index+1,image_url:uploadResult.secure_url}
+        })
+      )
+      return upload
+    }catch(err){
+      throw new Error("Lỗi upload ảnh: "+err.message)
+    }
+  }
 };
 
 export default albumService;

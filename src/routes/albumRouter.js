@@ -10,10 +10,12 @@ import {
   validateUpdateAlbumRequest,
 } from "../middlewares/albumMiddleware.js";
 
+const upload = multer({ dest: "uploads/" });
+
 router.post(
   "/createAlbum",
   authMiddleware,
-  validateCreateAlbumRequest,
+  validateCreateAlbumRequest,upload.single("cover_image"),
   albumController.createAlbum
 );
 

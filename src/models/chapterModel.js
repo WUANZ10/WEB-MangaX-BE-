@@ -7,6 +7,7 @@ const chapterSchema = new mongoose.Schema(
       ref: "Album",
       required: true,
     },
+    chapter_cover:{type:String,required:true},
     chapter_name: { type: String, required: true },
     chapter_number: { type: Number, required: true },
     pages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Page" }],
