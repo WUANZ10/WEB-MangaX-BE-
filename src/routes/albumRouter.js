@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+import multer from "multer";
 import albumController from "../controllers/albumController.js";
 import {
   authMiddleware,
@@ -15,7 +16,7 @@ const upload = multer({ dest: "uploads/" });
 router.post(
   "/createAlbum",
   authMiddleware,
-  validateCreateAlbumRequest,upload.single("cover_image"),
+  validateCreateAlbumRequest, upload.single("cover_image"),
   albumController.createAlbum
 );
 
