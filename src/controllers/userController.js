@@ -27,12 +27,10 @@ const userController = {
         }
 
         if (password !== confirmPassword) {
-          return res
-            .status(400)
-            .json({
-              status: "error",
-              message: "Password and confirm password do not match",
-            });
+          return res.status(400).json({
+            status: "error",
+            message: "Password and confirm password do not match",
+          });
         }
 
         const response = await userService.createUser(req.body);
@@ -47,10 +45,32 @@ const userController = {
     try {
       await validateLoginRequest(req, res, async () => {
         const response = await userService.loginUser(req.body);
-        if (response.status === "error") {
-          return res.status(401).json(response);
+        if (
+          response &&
+          typeof response === "object" &&
+          !Array.isArray(response)
+        ) {
+          const {
+            data: { refresh_token, ...newData },
+            ...rest
+          } = response;
+          const newResponse = { ...rest, data: newData };
+
+          res.cookie("refresh_token", refresh_token, {
+            HttpOnly: true,
+            Secure: true,
+          });
+
+          if (response.status === "error") {
+            return res.status(401).json(response);
+          }
+
+          return res.status(200).json(newResponse);
+        } else {
+          return res
+            .status(500)
+            .json({ status: "error", message: "Invalid response format" });
         }
-        return res.status(200).json(response);
       });
     } catch (error) {
       return handleError(res, error);
@@ -119,8 +139,9 @@ const userController = {
   },
 
   refreshToken: async (req, res) => {
+    console.log(req.cookies)
     try {
-      const token = req.headers.token?.split(" ")[1];
+      const token = req.cookies.refresh_token;
 
       if (!token) {
         return res

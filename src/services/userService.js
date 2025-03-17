@@ -68,11 +68,15 @@ const userService = {
       const access_token = await jwtService.generalAccessToken({
         id: existingUser.id,
         isAdmin: existingUser.isAdmin,
+        username: existingUser.username,
+        email: existingUser.email,
       });
 
       const refresh_token = await jwtService.generateRefreshToken({
         id: existingUser.id,
         isAdmin: existingUser.isAdmin,
+        username: existingUser.username,
+        email: existingUser.email,
       });
 
       return handleSuccessResponse("User logged in successfully", {
