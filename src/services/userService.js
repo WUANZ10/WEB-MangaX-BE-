@@ -53,7 +53,7 @@ const userService = {
       const existingUser = await User.findOne({ email });
 
       if (!existingUser) {
-        return handleErrorResponse("The email is not defined");
+        return { status: "error", message: "The email is not defined" };
       }
 
       const isPasswordValid = bcrypt.compareSync(
@@ -62,7 +62,7 @@ const userService = {
       );
 
       if (!isPasswordValid) {
-        return handleErrorResponse("Invalid password");
+        return { status: "error", message: "Invalid password" };
       }
 
       const access_token = await jwtService.generalAccessToken({
@@ -79,11 +79,15 @@ const userService = {
         email: existingUser.email,
       });
 
-      return handleSuccessResponse("User logged in successfully", {
-        access_token,
-        refresh_token,
-        userId: existingUser.id,
-      });
+      return {
+        status: "success",
+        message: "User logged in successfully",
+        data: {
+          access_token,
+          refresh_token,
+          userId: existingUser.id,
+        },
+      };
     } catch (error) {
       throw new Error(error.message);
     }

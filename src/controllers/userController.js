@@ -45,32 +45,28 @@ const userController = {
     try {
       await validateLoginRequest(req, res, async () => {
         const response = await userService.loginUser(req.body);
-        if (
-          response &&
-          typeof response === "object" &&
-          !Array.isArray(response)
-        ) {
-          const {
-            data: { refresh_token, ...newData },
-            ...rest
-          } = response;
-          const newResponse = { ...rest, data: newData };
 
-          res.cookie("refresh_token", refresh_token, {
-            HttpOnly: true,
-            Secure: true,
-          });
+        console.log("Response from loginUser:", response);
 
-          if (response.status === "error") {
-            return res.status(401).json(response);
-          }
-
-          return res.status(200).json(newResponse);
-        } else {
+        if (!response || !response.data) {
           return res
             .status(500)
             .json({ status: "error", message: "Invalid response format" });
         }
+
+        if (response.status === "error") {
+          return res.status(401).json(response);
+        }
+
+        const { refresh_token, ...newData } = response.data;
+        const newResponse = { ...response, data: newData };
+
+        res.cookie("refresh_token", refresh_token, {
+          httpOnly: true,
+          secure: true,
+        });
+
+        return res.status(200).json(newResponse);
       });
     } catch (error) {
       return handleError(res, error);
@@ -139,7 +135,7 @@ const userController = {
   },
 
   refreshToken: async (req, res) => {
-    console.log(req.cookies)
+    console.log(req.cookies);
     try {
       const token = req.cookies.refresh_token;
 
